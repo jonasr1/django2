@@ -1,11 +1,32 @@
+{% load django_bootstrap5 %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact</title>
+  {% bootstrap_css %}
 </head>
-<body>
-  <h1>Contact</h1>
+<body class="bg-light">
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-8 col-lg-6">
+        <h1 class="mb-4">Contact</h1>
+        <div class="card shadow-sm">
+          {% bootstrap_messages %}
+          <div class="card-body">
+            <form action="{% url 'contact' %}" method="post" class="form">
+              {% csrf_token %}
+              {% bootstrap_form form %}
+              <div class="d-grid">
+                <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% bootstrap_javascript %}
 </body>
 </html>
