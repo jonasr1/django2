@@ -2,6 +2,8 @@ from django import forms
 from django.conf import settings
 from django.core.mail import EmailMessage
 
+from django2.models import Product
+
 
 class ContactForm(forms.Form):
     subject = forms.CharField(label="Subject", max_length=120)
@@ -24,3 +26,9 @@ class ContactForm(forms.Form):
             reply_to=[sender],
         )
         return mail.send()
+
+
+class ProductModelForm(forms.ModelForm):
+    class Meta:
+        model = Product
+        fields = ("name", "price", "stock", "picture")

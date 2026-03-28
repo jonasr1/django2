@@ -9,10 +9,17 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
 from pathlib import Path
 
-from decouple import config
+import dj_database_url
+from decouple import Csv, config
+
+DATABASES = {
+    "default": dj_database_url.config(
+        conn_max_age=600,
+        conn_health_checks=True,
+    ),
+}
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -20,14 +27,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config("SECRET_KEY", default="INSECURE")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ["*"]
-
+DEBUG = config("DEBUG", cast=bool, default=False)
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
 ROOT_URLCONF = "core.urls"
 
 TEMPLATES = [
@@ -38,6 +41,7 @@ TEMPLATES = [
         "OPTIONS": {
             "context_processors": [
                 "django.template.context_processors.request",
+                "django.template.context_processors.csrf",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
             ],
@@ -50,16 +54,16 @@ WSGI_APPLICATION = "core.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": config("DB_ENGINE", default="django.db.backends.mysql"),
-        "NAME": config("DB_NAME", default="your_database_name"),
-        "USER": config("DB_USER", default="your_username"),
-        "PASSWORD": config("DB_PASSWORD", default="your_password"),
-        "HOST": config("DB_HOST", default="localhost"),
-        "PORT": config("DB_PORT", default="3306"),
-    },
-}
+# DATABASES = {
+#     "default": {
+#         "ENGINE": config("DB_ENGINE", default="django.db.backends.mysql"),
+#         "NAME": config("DB_NAME", default="your_database_name"),
+#         "USER": config("DB_USER", default="your_username"),
+#         "PASSWORD": config("DB_PASSWORD", default="your_password"),
+#         "HOST": config("DB_HOST", default="localhost"),
+#         "PORT": config("DB_PORT", default="3306"),
+#     },
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -93,9 +97,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Uploaded media (user files)
+MEDIA_URL = config("MEDIA_URL", default="/media/")
+MEDIA_ROOT = Path(config("MEDIA_ROOT", default=str(BASE_DIR / "media")))
 
 # Email
 _default_email_backend = (
@@ -103,16 +111,21 @@ _default_email_backend = (
     if DEBUG
     else "django.core.mail.backends.smtp.EmailBackend"
 )
-EMAIL_BACKEND = config("EMAIL_BACKEND", default=_default_email_backend)
-EMAIL_HOST = config("EMAIL_HOST", default="localhost")
-EMAIL_PORT = config("EMAIL_PORT", default=25, cast=int)
-EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
-EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
-EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=False, cast=bool)
-DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="webmaster@localhost")
-CONTACT_EMAIL = config("CONTACT_EMAIL", default=(EMAIL_HOST_USER or DEFAULT_FROM_EMAIL))
+
+# EMAIL_BACKEND = config("EMAIL_BACKEND", default=_default_email_backend)
+# EMAIL_HOST = config("EMAIL_HOST", default="localhost")
+# EMAIL_PORT = config("EMAIL_PORT", default=25, cast=int)
+# EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
+# EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
+# EMAIL_USE_TLS = config("EMAIL_USE_TLS", default=False, cast=bool)
+# DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL", default="webmaster@localhost")
+# CONTACT_EMAIL = config("CONTACT_EMAIL", default=(EMAIL_HOST_USER or DEFAULT_FROM_EMAIL))
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "product"
+LOGOUT_REDIRECT_URL = "login"

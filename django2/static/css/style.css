@@ -1,0 +1,18 @@
+.btn-link,
+.btn-link:hover,
+.btn-link:focus {
+  text-decoration: none;
+}
+
+.btn-link {
+  color: #ffffff;
+}
+
+.product-modal .modal-content {
+  background-color: var(--bs-dark);
+  color: var(--bs-light);
+}
+
+.product-modal .modal-header {
+  border-bottom-color: rgba(255, 255, 255, 0.15);
+}

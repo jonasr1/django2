@@ -1,11 +1,19 @@
-INSTALLED_APPS = [
+DJANGO_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django2",
+]
+
+THIRD_PARTY_APPS = [
     "pictures",
     "django_bootstrap5",
 ]
+
+LOCAL_APPS = [
+    "django2",
+]
+
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

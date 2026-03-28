@@ -1,0 +1,22 @@
+{% load django_bootstrap5 static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="A Django2 web application.">
+  <meta name="keywords" content="django, web, python, bootstrap">
+  <title>{% block title %}Django2{% endblock title %}</title>
+  {% bootstrap_css %}
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  {% block extra_head %}{% endblock extra_head %}
+</head>
+<body class="{% block body_class %}{% endblock body_class %}">
+  {% block messages %}
+    {% bootstrap_messages %}
+  {% endblock messages %}
+  {% block content %}{% endblock content %}
+  {% bootstrap_javascript %}
+  {% block extra_js %}{% endblock extra_js %}
+</body>
+</html>

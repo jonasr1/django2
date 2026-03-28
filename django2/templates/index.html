@@ -1,12 +1,86 @@
-{% load django_bootstrap5 %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Index</title>
-</head>
-<body>
-  <h1>Index</h1>
-</body>
-</html>
+{% extends "base.html" %}
+  
+{% block title %}
+  Index
+{% endblock title %}
+{% block body_class %}
+  bg-light
+{% endblock body_class %}
+{% block content %}
+  <div class="container py-5">
+    <h1 class="mb-4">Products</h1>
+    <div class="table-responsive">
+      <table class="table table-dark table-hover align-middle">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Stock</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for product in products %}
+            <tr>
+              <th scope="row">{{ product.id }}</th>
+              <td>
+                <button type="button"
+                        class="btn btn-link p-0"
+                        data-bs-toggle="modal"
+                        data-bs-target="#productModal{{ product.id }}">{{ product.name }}</button>
+              </td>
+              <td>{{ product.price }}</td>
+              <td>{{ product.stock }}</td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="4" class="text-center text-muted py-4">No products yet.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% for product in products %}
+      <div class="modal fade product-modal"
+          id="productModal{{ product.id }}"
+          tabindex="-1"
+          aria-labelledby="productModalLabel{{ product.id }}"
+          aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="productModalLabel{{ product.id }}">{{ product.name }}</h1>
+              <button type="button"
+                      class="btn-close btn-close-white"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <dl class="row mb-3">
+                <dt class="col-sm-3">Price</dt>
+                <dd class="col-sm-9">
+                  {{ product.price }}
+                </dd>
+                <dt class="col-sm-3">Stock</dt>
+                <dd class="col-sm-9">
+                  {{ product.stock }}
+                </dd>
+              </dl>
+              {% if product.picture %}
+                <img src="{{ product.picture.url }}"
+                    class="img-fluid rounded d-block mx-auto"
+                    style="max-height:70vh;
+                            object-fit:contain"
+                    alt="{{ product.name }}"
+                    width="auto"
+                    height="auto">
+              {% else %}
+                <p class="text-muted mb-0">No image for this product.</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endblock content %}
